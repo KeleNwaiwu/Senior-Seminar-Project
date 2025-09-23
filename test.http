@@ -1,0 +1,14 @@
+
+
+
+POST http://localhost:3000/api/vapi/generate
+Content-Type: application/json
+
+{
+  "type": "technical",
+  "role": "Frontend Developer",
+  "level": "Junior",
+  "techstack": "React,TypeScript,HTML,CSS",
+  "amount": 3,
+  "userid": "NyhxFfh8SAajrKvQGdEMQK8w7lu2"
+}
