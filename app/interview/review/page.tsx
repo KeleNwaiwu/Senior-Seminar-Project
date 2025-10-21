@@ -1,6 +1,7 @@
 
 "use client";
 import { useEffect, useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 
 interface SavedMessage {
   role: "user" | "system" | "assistant";
@@ -9,18 +10,45 @@ interface SavedMessage {
 
 const InterviewReview = () => {
   const [messages, setMessages] = useState<SavedMessage[]>([]);
+  const search = useSearchParams();
+  const router = useRouter();
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const stored = sessionStorage.getItem("interviewMessages");
-      if (stored) {
-        setMessages(JSON.parse(stored));
+    if (typeof window === "undefined") return;
+
+    const id = search.get("id");
+    if (id) {
+      const storedPast = localStorage.getItem("pastInterviews");
+      if (storedPast) {
+        try {
+          const arr = JSON.parse(storedPast);
+          const found = arr.find((x: any) => x.id === id);
+          if (found && found.messages) {
+            setMessages(found.messages);
+            return;
+          }
+        } catch (e) {
+          console.error(e);
+        }
       }
     }
-  }, []);
+
+    const stored = sessionStorage.getItem("interviewMessages");
+    if (stored) {
+      setMessages(JSON.parse(stored));
+    }
+  }, [search]);
 
   return (
     <div className="w-full min-h-screen flex flex-col items-center justify-center bg-[#f4f7fa] p-8">
+      <div className="w-full max-w-7xl px-4 mb-6 flex justify-end">
+        <button
+          onClick={() => router.push('/')}
+          className="px-4 py-2 bg-primary-200 text-dark-100 rounded-full"
+        >
+          Go to Home
+        </button>
+      </div>
       <div className="bg-white rounded-2xl shadow-xl p-10 w-full max-w-3xl">
         <h1 className="text-3xl font-bold mb-6 text-center">Interview Review</h1>
         <div className="flex flex-col gap-4">

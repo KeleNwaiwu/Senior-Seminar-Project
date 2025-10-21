@@ -144,6 +144,25 @@ const Agent = ({
   const handleDisconnect = () => {
     setCallStatus(CallStatus.FINISHED);
     vapi.stop();
+
+    // save interview to localStorage as a past interview
+    try {
+      if (typeof window !== 'undefined') {
+        const stored = localStorage.getItem('pastInterviews');
+        const past = stored ? JSON.parse(stored) : [];
+        const id = `int_${Date.now()}`;
+        const newEntry = {
+          id,
+          userName: userName || 'Unknown',
+          timestamp: new Date().toISOString(),
+          messages,
+        };
+        past.unshift(newEntry);
+        localStorage.setItem('pastInterviews', JSON.stringify(past));
+      }
+    } catch (e) {
+      console.error('Error saving past interview', e);
+    }
   };
 
   return (
