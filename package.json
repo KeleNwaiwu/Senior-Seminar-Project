@@ -18,6 +18,8 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.18",
+  "chart.js": "^4.4.0",
+  "react-chartjs-2": "^5.2.0",
     "firebase": "^12.2.1",
     "firebase-admin": "^13.5.0",
     "lucide-react": "^0.543.0",
