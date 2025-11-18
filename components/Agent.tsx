@@ -19,6 +19,7 @@ enum CallStatus {
 interface SavedMessage {
   role: "user" | "system" | "assistant";
   content: string;
+  timestamp?: string;
 }
 
 const Agent = ({
@@ -46,7 +47,7 @@ const Agent = ({
 
     const onMessage = (message: Message) => {
       if (message.type === "transcript" && message.transcriptType === "final") {
-        const newMessage = { role: message.role, content: message.transcript };
+        const newMessage: SavedMessage = { role: message.role, content: message.transcript, timestamp: new Date().toISOString() };
         setMessages((prev) => [...prev, newMessage]);
       }
     };
@@ -151,11 +152,17 @@ const Agent = ({
         const stored = localStorage.getItem('pastInterviews');
         const past = stored ? JSON.parse(stored) : [];
         const id = `int_${Date.now()}`;
+        // ensure every message has a timestamp
+        const messagesWithTs = messages.map((m: SavedMessage) => ({
+          ...m,
+          timestamp: m.timestamp ?? new Date().toISOString(),
+        }));
+
         const newEntry = {
           id,
           userName: userName || 'Unknown',
           timestamp: new Date().toISOString(),
-          messages,
+          messages: messagesWithTs,
         };
         past.unshift(newEntry);
         localStorage.setItem('pastInterviews', JSON.stringify(past));
